@@ -2,14 +2,48 @@ import React, { useState } from 'react'
 
 export default function LoginForm() {
 
+//client component for CSR
 const [email,setEmail] = useState("");
 const [password, setPassword] = useState("");
+const [emailError, setEmailError] = useState("");
+const [passwordError, setPasswordError] = useState("");
+
+const validateForm = () => {
+  if(!email) {
+    setEmailError("Email is required!");
+    return false;
+  } else{
+    setEmailError("");
+  }
+
+  if(!password) {
+    setPasswordError("password is required!");
+    return false;
+  } else{
+    setPasswordError("");
+  }
+
+  
+
+  return true;
+}
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+
+  const isValid = validateForm();
+
+  if(isValid) {
+  //Login form Data Submission
+  console.log("Form Data:", {email:email, password: password});
+  }
+}
 
   return (
     
       <div className="w-[380px] mx-auto">
         <div className="bg-white shadow-md border border-gray-200 rounded-lg p-4">
-          <form action="#" className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <h3 className="text-center text-xl font-semibold text-gray-900">
               Sign in to your account
             </h3>
@@ -28,10 +62,13 @@ const [password, setPassword] = useState("");
                 name="email"
                 id="email"
                 value={email}
-                onChange= {(e) => setEmail(e.target.Value)}
+                onChange= {(e) => setEmail(e.target.value)}
                 className="bg-gray-50 border border-gray-300 text-gray-900 ring-1 ring-offset-2 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
                 placeholder="yourname@gmail.com"
               />
+
+            {emailError && <div className="text-red-600 text-xs mt-2 ml-1">{emailError}</div> }  {/*email Error massage */}
+
             </div>
             <div>
               {" "}
@@ -47,11 +84,15 @@ const [password, setPassword] = useState("");
                 name="password"
                 id="password"
                 value={password}
-                onChange= {(e) => setPassword(e.target.Value)}
+                onChange= {(e) => setPassword(e.target.value)}
                 className="bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:ring-1 focus:ring-offset-2  focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
                 placeholder="Enter password"
               />
+
+              
             </div>
+
+            {passwordError && <div className="text-red-600 text-xs mt-2 ml-1">{passwordError}</div> } {/*password Error massage */}
 
             {/*remember me */}
             <div className="flex items-start">
