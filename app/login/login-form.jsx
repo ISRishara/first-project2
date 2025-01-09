@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import { loginUser } from '@/lib/apis/server';
+import React, { useState } from 'react';
+
 
 export default function LoginForm() {
 
@@ -28,14 +30,16 @@ const validateForm = () => {
   return true;
 }
 
-const handleSubmit = (e) => {
+const handleSubmit = async (e) => {
   e.preventDefault();
 
   const isValid = validateForm();
 
   if(isValid) {
   //Login form Data Submission
-  console.log("Form Data:", {email:email, password: password});
+  const login = await loginUser({email: email, password: password});
+
+  console.log("LOGIN RESPONSE", login);
   }
 }
 
