@@ -123,7 +123,7 @@ const handleSubmit = async (e) => {
 
             <div className="text-sm font-medium text-gray-500 flex justify-center space-x-2">
               <span>Not Registered?</span>
-              <a href="#" className="text-blue-700">Create an account</a>
+              <a href="/register" className="text-blue-700 hover:underline">Create an account</a>
             </div>
           </form>
         </div>
