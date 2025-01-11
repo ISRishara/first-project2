@@ -1,4 +1,7 @@
 import { getMovies } from "@/lib/apis/server";
+import { SiImdb } from "react-icons/si";
+import { SiNetflix } from "react-icons/si";
+
 import {
   Card,
   CardContent,
@@ -8,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
 
 export default async function DashboardPage() {
   //1. add shadcn card
@@ -23,6 +27,7 @@ export default async function DashboardPage() {
       {/* navigation bar */}
       <nav className="bg-red-900 w-full h-16 flex justify-start items-center">
         <div className="container">
+          <SiNetflix className="text-white bg-red-800 text-4xl mt-3"/> 
           <h1 className="text-white font-bold text-xl">Netflix Dashboard</h1>
         </div>
       </nav>
@@ -35,7 +40,12 @@ export default async function DashboardPage() {
               <div key={movie._id} className="h-[480px]">
                 <Card className="h-full">
                   <CardHeader>
-                    <CardTitle>{movie?.title}</CardTitle>
+                    <CardTitle>
+                      {movie?.title}{" "}
+                      <span className="text-xs text-neutral-400 font-normal">
+                        ({movie?.year ?? "N/A"})
+                      </span>
+                    </CardTitle>
                     <CardDescription className="sr-only">
                       {movie?.title}
                     </CardDescription>
@@ -51,7 +61,26 @@ export default async function DashboardPage() {
                         priority={true}
                       />
                     </div>
-                    <p className="line-clamp-3">{movie?.plot}</p>
+                    <div className="flex flex-col justify-between h-[154px]">
+                      {/* movie plot */}
+                      <p className="line-clamp-3 text-xs">{movie?.plot}</p>
+                      {/* movie Genres */}
+                      <div className="text-sm text-blue-900 font-semibold">
+                        {movie?.genres?.length && movie?.genres?.join(" / ")}
+                      </div>
+                      <div className="flex flex-row justify-between items-center">
+                        <Badge variant="success" className="font-medium">
+                          Rated: {movie?.rated ?? "N/A"}
+                        </Badge>
+
+                        <div className="flex flex-row gap-1 items-center" title="IMdb Ratings">
+                          <SiImdb className="text-black bg-yellow-500 text-xl" />
+                          <span className="text-sm font-semibold">
+                            {movie?.imdb?.rating ?? 0}/10
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </CardContent>
                   <CardFooter className="flex justify-between"></CardFooter>
                 </Card>
