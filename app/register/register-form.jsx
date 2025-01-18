@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 
 import {
@@ -13,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { registerUser } from "@/lib/apis/server";
 //import { Span } from "next/dist/trace";
 
 const DEFAULT_ERROR = {
@@ -23,31 +25,43 @@ const DEFAULT_ERROR = {
 //keep this as the client component (functional component)
 export default function RegisterForm() {
   const [error, setError] = useState(DEFAULT_ERROR);
+  const[isLoading, setLoading] = useState(false);
 
   const handleSubmitForm = async (event) => {
     event?.preventDefault();
     const formData = new FormData(event?.currentTarget);
-    const name = formData.get("name") ?? "";
-    const email = formData.get("email") ?? "";
+    const name = formData.get("name").toString();
+    const email = formData.get("email").toString();
     const password = formData.get("password") ?? "";
     const confirmPassword = formData.get("confirm-password") ?? "";
 
     //console.log("Submitted!", {name, email, password, confirmPassword});
 
-    if (name && email && password && confirmPassword) {
+    //basic frontend validation logic
+
+    //if (name && email && password && confirmPassword) {
       if (password === confirmPassword) {
         setError(DEFAULT_ERROR);
+        setLoading(true);
+
+        const registerResp = await registerUser({ name, email, password });
+        setLoading(false);
+
+        if(registerResp?.error) {
+          setError({ error: true, message: registerResp. error });
+        }
+
       } else {
         setError({ error: true, message: "Password doesn't match" });
       }
-    }
+    //}
 
-    console.log("Error!", error);
+    //console.log("Error!", error);
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <Card className="bg-blue-50/90 w-[350px]">
+      <Card className="bg-white w-[350px]">
         <CardHeader>
           <CardTitle>Create an account</CardTitle>
           <CardDescription>
@@ -102,7 +116,7 @@ export default function RegisterForm() {
                 )}
               </div>
 
-              <div className="flex justify-center gap-1 text-xs">
+              <div className="flex justify-center gap-1 text-sm text-gray-500">
                 Already have an account?{" "}
                 <Link href="/login" className="text-blue-600 hover:underline">
                   Login
@@ -111,7 +125,11 @@ export default function RegisterForm() {
             </div>
           </CardContent>
           <CardFooter className="flex justify-center">
-            <Button className="flex-1 bg-blue-700 hover:bg-blue-800 focus:ring-4" type="submit">
+            <Button
+              className="flex-1 bg-blue-700 hover:bg-blue-800 focus:ring-4"
+              type="submit" disabled={isLoading}
+            >
+            {isLoading && <Loader2 className="animate-spin" />}
               Register
             </Button>
           </CardFooter>
