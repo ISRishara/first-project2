@@ -1,5 +1,8 @@
-import { loginUser } from '@/lib/apis/server';
+"use client";
+//import { loginUser } from '@/lib/apis/server';
 import React, { useState } from 'react';
+import { redirect } from "next/navigation";
+import { signIn } from "@/lib/auth-client";
 
 
 export default function LoginForm() {
@@ -37,11 +40,24 @@ const handleSubmit = async (e) => {
 
   if(isValid) {
   //Login form Data Submission
-  const login = await loginUser({email: email, password: password});
+  // const login = await loginUser({email: email, password: password});
 
-  console.log("LOGIN RESPONSE", login);
+  // console.log("LOGIN RESPONSE", login);
+
+  await signIn.email({
+    email,
+    password,
+  },{
+    onSuccess: () => {
+      redirect("/dashboard");
+    },
+    onError: (ctx) => {
+      console.log(ctx.error.message);
+      
+    },
+  });
   }
-}
+};
 
   return (
     

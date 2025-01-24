@@ -23,17 +23,8 @@ export default async function DashboardPage() {
   console.log("MOVIES FE", moviesQuery);
 
   return (
-    <main>
-      {/* navigation bar */}
-      <nav className="bg-red-900 w-full h-16 flex justify-start items-center">
-        <div className="container">
-          <SiNetflix className="text-white bg-red-800 text-4xl mt-3"/> 
-          <h1 className="text-white font-bold text-xl">Netflix Dashboard</h1>
-        </div>
-      </nav>
-
-      {/*body section*/}
-      <div className="container mt-8">
+      <div className="space-y-4">
+        <h1 className="text-3xl font-bold">Movies</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {moviesQuery?.length &&
             moviesQuery.map((movie) => (
@@ -88,6 +79,5 @@ export default async function DashboardPage() {
             ))}
         </div>
       </div>
-    </main>
   );
 }
