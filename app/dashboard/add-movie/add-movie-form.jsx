@@ -25,12 +25,14 @@ import { MultiSelect } from "@/components/Multi-select";
 import { GENRES, RATINGS } from "@/lib/constants";
 import { useState } from "react";
 import { createMovie } from "@/lib/actions/movie";
+import { useToast } from "@/hooks/use-toast";
 
 //client component
 export default function AddMovieForm() {
 const [genres, setGenres] = useState([]);
 const [rated, setRated] = useState("");
 const [isLoading, setLoading] = useState("");
+const { toast } = useToast();
 const genresList = GENRES.map((genre) => ({
     label: genre,
     value:genre,
@@ -42,12 +44,20 @@ const handleSubmitForm = async (event) =>  {
     const title = formData.get("title")?.toString();
     const year = Number(formData.get("year"));
     const plot = formData.get("plot")?.toString(); 
+    const poster = formData.get("poster")?.toString();
 
-    if (title && year && plot && rated) {
-        console.log({ title, year, plot, rated, genres});
+    if (title && year && plot && rated && poster) {
         setLoading(true);
-        await createMovie({ title, year, plot, rated, genres });
+        const resp = await createMovie({ title, year, plot, rated, genres, poster });
         setLoading(false);
+        if(resp.success) {
+          toast({
+            variant: "success",
+            title:"Movie Added!",
+            description: "Movie was added to NetFlix database",
+          });
+
+        }
     }
     
 };
@@ -111,6 +121,17 @@ const handleSubmitForm = async (event) =>  {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="poster">Poster URL</Label>
+            <Input
+              id="poster"
+              name="poster"
+              type="text"
+              defaultValue="https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_FMjpg_UX700_.jpg"
+              placeholder="Enter the poster URL"
+            />
           </div>
 
         </CardContent>
