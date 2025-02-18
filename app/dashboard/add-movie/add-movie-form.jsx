@@ -2,21 +2,21 @@
 
 import { Loader2 } from "lucide-react";
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-  } from "@/components/ui/select";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,85 +29,89 @@ import { useToast } from "@/hooks/use-toast";
 
 //client component
 export default function AddMovieForm() {
-const [genres, setGenres] = useState([]);
-const [rated, setRated] = useState("");
-const [isLoading, setLoading] = useState("");
-const { toast } = useToast();
-const genresList = GENRES.map((genre) => ({
-    label: genre,
-    value:genre,
-}));
+  const [genres, setGenres] = useState([]);
+  const [rated, setRated] = useState("");
+  //const[imdbRating, setIMDbRating] = useState(0);
+  const [isLoading, setLoading] = useState("");
+  const { toast } = useToast();
 
-const handleSubmitForm = async (event) =>  {
+  const genresList = GENRES.map((genre) => ({
+    label: genre,
+    value: genre,
+  }));
+
+  const handleSubmitForm = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const title = formData.get("title")?.toString();
     const year = Number(formData.get("year"));
-    const plot = formData.get("plot")?.toString(); 
+    const plot = formData.get("plot")?.toString();
     const poster = formData.get("poster")?.toString();
+    const imdb = Number(formData.get("imdb"));
 
     if (title && year && plot && rated && poster) {
-        setLoading(true);
-        const resp = await createMovie({ title, year, plot, rated, genres, poster });
-        setLoading(false);
-        if(resp.success) {
-          toast({
-            variant: "success",
-            title:"Movie Added!",
-            description: "Movie was added to NetFlix database",
-          });
-
-        }
+      setLoading(true);
+      const resp = await createMovie({
+        title,
+        year,
+        plot,
+        rated,
+        genres,
+        poster,
+        imdb: { rating: imdb },
+      });
+      setLoading(false);
+      if (resp.success) {
+        toast({
+          variant: "success",
+          title: "Movie Added Successful!",
+          description: "Movie was added to NetFlix database",
+        });
+      }
     }
-    
-};
-
+  };
 
   return (
-  <Card className="max-w-2xl mx-auto">
-    <CardHeader>
+    <Card className="max-w-2xl mx-auto">
+      <CardHeader>
         <CardTitle>Add Movie</CardTitle>
         <CardDescription>Add a movie to the NetFlix database</CardDescription>
-    </CardHeader>
+      </CardHeader>
 
-    <form onSubmit={handleSubmitForm}>
+      <form onSubmit={handleSubmitForm}>
         <CardContent className="space-y-4">
-            <div>
-                <Label htmlFor="title">Movie Title</Label>
-                <Input
-                    id="title"
-                    name="title"
-                    placeholder="Enter the movie title"
-                />
-            </div>
-            <div>
-                <Label htmlFor="year">Movie Year</Label>
-                <Input
-                    id="year"
-                    name="year"
-                    placeholder="Enter the year"
-                />
-            </div>
-            <div>
-                <Label htmlFor="plot">Movie Plot</Label>
-                <Textarea
-                    id="plot"
-                    name="plot"
-                    placeholder="Enter the movie plot"
-                />
- 
-            </div>
+          <div>
+            <Label htmlFor="title">Movie Title</Label>
+            <Input
+              id="title"
+              name="title"
+              placeholder="Enter the movie title"
+            />
+          </div>
+          <div>
+            <Label htmlFor="year">Movie Year</Label>
+            <Input id="year" name="year" placeholder="Enter the year" />
+          </div>
+          <div>
+            <Label htmlFor="plot">Movie Plot</Label>
+            <Textarea
+              id="plot"
+              name="plot"
+              placeholder="Enter the movie plot"
+            />
+          </div>
 
-            <div>
-                <Label htmlFor="genres">Movie Genres</Label>
-                <MultiSelect
-                list={genresList}
-                placeholder="select movie genres"
-                onValueChange={setGenres}
-                />
-            </div>
+          <div>
+            <Label htmlFor="genres">Movie Genres</Label>
+            <MultiSelect
+              list={genresList}
+              placeholder="select movie genres"
+              selectedItems={genres}
+              onValueChange={setGenres}
+            />
+          </div>
 
-            <div>
+          <div>
             <Label htmlFor="rated">Movie Rated</Label>
             <Select onValueChange={(val) => setRated(val)}>
               <SelectTrigger>
@@ -123,6 +127,8 @@ const handleSubmitForm = async (event) =>  {
             </Select>
           </div>
 
+          
+
           <div>
             <Label htmlFor="poster">Poster URL</Label>
             <Input
@@ -133,7 +139,6 @@ const handleSubmitForm = async (event) =>  {
               placeholder="Enter the poster URL"
             />
           </div>
-
         </CardContent>
 
         <CardFooter className="w-full flex justify-end space-x-2">
@@ -144,7 +149,7 @@ const handleSubmitForm = async (event) =>  {
             {isLoading && <Loader2 className="animate-spin" />} Add Movie
           </Button>
         </CardFooter>
-    </form>
-  </Card>
+      </form>
+    </Card>
   );
 }

@@ -39,7 +39,8 @@ export default function EditMovieForm({movie, open, onCancel, isLoading }) {
         value:genre,
     }));
     const handleSubmitForm = () => {
-        //
+        // Save the updated movie to the database
+        
     };
   return (
     <Dialog open={open} onOpenChange={onCancel}>
@@ -91,6 +92,7 @@ export default function EditMovieForm({movie, open, onCancel, isLoading }) {
                 <MultiSelect
                 list={genresList}
                 placeholder="select movie genres"
+                selectedItems={genres}
                 onValueChange={setGenres}
                 />
             </div>
@@ -109,6 +111,20 @@ export default function EditMovieForm({movie, open, onCancel, isLoading }) {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="imdb">IMDb Rating</Label>
+            <Input
+              id="imdb"
+              name="imdb"
+              max="10.0"
+              step="0.1"
+              type="number"
+              value={imdbRating}
+              onChange={(e) => setIMDbRating(Number(e.target.value))}
+              placeholder="Enter IMDb rating"
+            />
           </div>
 
           <div>
