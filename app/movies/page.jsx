@@ -22,6 +22,10 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 
+//Next.js will invalidate the cache when a
+//request comes in, at most once every 60 seconds.
+//export const revalidate = 60;
+
 export default async function MoviesPublicPage() {
   //1. add shadcn card
   //2. create movies GET endpoints
